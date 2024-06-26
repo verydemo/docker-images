@@ -19,7 +19,8 @@ jobs:
 
       - name: Build the Docker image
         run: |
-          src_image_name = ${{ env.IMAGE }}
+          echo $IMAGE
+          src_image_name = $IMAGE
           desc_image_name = ${src_image_name//:/-}
 
           # 登录阿里云镜像仓库
