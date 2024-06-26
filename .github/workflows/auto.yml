@@ -8,12 +8,14 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
 
-      - name: Read .env file
-        id: myenv
-        uses: chrissimpkins/read-env-file-action@v1
+      - name: Load .env file
+        uses: aarcangeli/load-dotenv@v1.0.0
         with:
-          path: 'env'
-
+          path: '.'
+          filenames: |
+            env
+          quiet: false
+          if-file-not-found: error
 
       - name: Build the Docker image
         run: |
