@@ -8,15 +8,21 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
 
+      - name: Read .env file
+        id: myenv
+        uses: chrissimpkins/read-env-file-action@v1
+        with:
+          path: 'env'
+
+
       - name: Build the Docker image
         run: |
-          docker version
-          echo ${{ secrets.ALIYUNCS_USERNAME }}
-          echo ${{ secrets.ALIYUNCS_PASSWORD }}
-          
+          src_image_name = ${{ steps.myenv.outputs.image }}
+          desc_image_name = ${src_image_name//:/-}
+
           # 登录阿里云镜像仓库
           docker login --username=${{secrets.ALIYUNCS_USERNAME}} --password=${{secrets.ALIYUNCS_PASSWORD}} registry.cn-hangzhou.aliyuncs.com
           # 使用Dockerfile构建镜像
-          docker build . --file Dockerfile_ollama --tag registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:ollama
+          docker build . --build-arg $src_image_name --tag registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:$desc_image_name
           # 推送镜像到镜像仓库
-          docker push registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:ollama
+          docker push registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:$desc_image_name
