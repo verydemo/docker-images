@@ -1,1 +1,1 @@
-IMAGE=nginx:1.23.4-alpine
+IMAGE=nginx:1.22-alpine
