@@ -11,11 +11,11 @@ jobs:
       - name: Build the Docker image
         run: |
           docker version
-          echo ${{secrets.USERNAME}}
-          echo ${{secrets.PASSWORD}}
+          echo ${{secrets.aliyuncs.USERNAME}}
+          echo ${{secrets.aliyuncs.PASSWORD}}
           
           # 登录阿里云镜像仓库
-          docker login --username=${{ secrets.USERNAME }} --password=${{ secrets.PASSWORD }} registry.cn-hangzhou.aliyuncs.com
+          docker login --username=${{ secrets.aliyuncs.USERNAME }} --password=${{ secrets.aliyuncs.PASSWORD }} registry.cn-hangzhou.aliyuncs.com
           # 使用Dockerfile构建镜像
           docker build . --file Dockerfile_ollama --tag registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:ollama
           # 推送镜像到镜像仓库
