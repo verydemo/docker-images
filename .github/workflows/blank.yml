@@ -1,0 +1,19 @@
+name: Docker Image CI
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Build the Docker image
+        run: |
+          docker version
+          # 登录阿里云镜像仓库
+          docker login --username=623437847@qq.com --password=jiro1234 registry.cn-hangzhou.aliyuncs.com
+          # 使用Dockerfile构建镜像
+          docker build . --file Dockerfile_ollama --tag registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:ollama
+          # 推送镜像到镜像仓库
+          docker push registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:ollama
