@@ -23,7 +23,7 @@ jobs:
         run: |
           echo $IMAGE
           src_image_name=$IMAGE
-          desc_image_name=${src_image_name//:/-}
+          desc_image_name=$(echo "$src_image_name" | sed 's/[/:]/-/g')
 
           # 登录阿里云镜像仓库
           docker login --username=${{secrets.ALIYUNCS_USERNAME}} --password=${{secrets.ALIYUNCS_PASSWORD}} registry.cn-hangzhou.aliyuncs.com
