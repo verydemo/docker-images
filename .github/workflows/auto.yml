@@ -28,6 +28,6 @@ jobs:
           # 登录阿里云镜像仓库
           docker login --username=${{secrets.ALIYUNCS_USERNAME}} --password=${{secrets.ALIYUNCS_PASSWORD}} registry.cn-hangzhou.aliyuncs.com
           # 使用Dockerfile构建镜像
-          docker build . --build-arg $src_image_name --tag registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:$desc_image_name
+          docker build . --build-arg IMAGE=$src_image_name --tag registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:$desc_image_name
           # 推送镜像到镜像仓库
           docker push registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:$desc_image_name
