@@ -16,7 +16,8 @@ jobs:
         run: |
           # 登录阿里云镜像仓库
           docker login --username=${{secrets.ALIYUNCS_USERNAME}} --password=${{secrets.ALIYUNCS_PASSWORD}} registry.cn-hangzhou.aliyuncs.com
-          
+
+          echo "------------------------------------------------------------------------------------------" >> log.txt
           # 遍历 images.txt 进行pull push
           while IFS= read -r img; do
             OLD_IMAGE=$img
@@ -33,7 +34,7 @@ jobs:
             echo "Pushing image: $NEW_IMAGE"
             docker push $NEW_IMAGE
 
-            log1="${OLD_IMAGE} -> ${NEW_IMAGE}\n"
-            echo "$log1" > log.txt
+            image_log="${OLD_IMAGE} -> ${NEW_IMAGE}"
+            echo "$image_log" >> log.txt
           done < images.txt
           cat log.txt
