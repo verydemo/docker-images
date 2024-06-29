@@ -1,5 +1,2 @@
-postgres:12-alpine
-redis:7.0-alpine
-victoriametrics/victoria-metrics:v1.79.12
-flashcatcloud/nightingale:latest
-flashcatcloud/categraf:latest
+nginx:1.22-alpine
+nginx:1.23.4-alpine
