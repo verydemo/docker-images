@@ -1,3 +1,5 @@
-langgenius/dify-api:0.6.12
-postgres:15-alpine
-redis:6-alpine
+postgres:12-alpine
+redis:7.0-alpine
+victoriametrics/victoria-metrics:v1.79.12
+flashcatcloud/nightingale:latest
+flashcatcloud/categraf:latest
