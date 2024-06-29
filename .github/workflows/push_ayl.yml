@@ -33,7 +33,7 @@ jobs:
             echo "Pushing image: $NEW_IMAGE"
             docker push $NEW_IMAGE
 
-            log1="${OLD_IMAGE} -> ${NEW_IMAGE_VERSION}\n"
+            log1="${OLD_IMAGE} -> ${NEW_IMAGE}\n"
             echo "$log1" > log.txt
           done < images.txt
           cat log.txt
