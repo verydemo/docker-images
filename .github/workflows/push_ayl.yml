@@ -21,6 +21,9 @@ jobs:
           # 硬盘info
           df -Th
 
+          # docker info
+          docker info
+
           echo "------------------------------------------------------------------------------------------" >> log.txt
           # 遍历 images.txt 进行pull push
           while IFS= read -r img; do
