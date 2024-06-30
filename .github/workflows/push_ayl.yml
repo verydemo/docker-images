@@ -15,13 +15,15 @@ jobs:
 
       - name: Build the Docker image
         run: |
+          sudo systemctl stop docker
+          sudo mkdir -p /mnt/lib/docker
+          sudo mv /var/lib/docker/* /mnt/lib/docker/
+          echo '{ "exec-opts": ["native.cgroupdriver=cgroupfs"], "cgroup-parent": "/actions_job","data-root": "/mnt/newdata/docker"}' | sudo tee /etc/docker/daemon.json > /dev/null 
+          sudo systemctl daemon-reload
+          sudo systemctl start docker
+          
           # 登录阿里云镜像仓库
           docker login --username=${{secrets.ALIYUNCS_USERNAME}} --password=${{secrets.ALIYUNCS_PASSWORD}} registry.cn-hangzhou.aliyuncs.com
-
-          # 硬盘info
-          df -Th
-
-          cat /etc/docker/daemon.json
 
           # docker info
           docker info
