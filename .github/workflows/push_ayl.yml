@@ -21,6 +21,8 @@ jobs:
           # 硬盘info
           df -Th
 
+          cat /etc/docker/daemon.json
+
           # docker info
           docker info
 
