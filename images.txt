@@ -1,1 +1,1 @@
-eritpchy/aliyundrive-webdav:4.0.5
+eritpchy/aliyundrive-webdav
