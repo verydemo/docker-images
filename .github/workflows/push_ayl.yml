@@ -17,7 +17,6 @@ jobs:
         run: |
           sudo systemctl stop docker
           sudo mkdir -p /mnt/lib/docker
-          sudo cp -rf /var/lib/docker/* /mnt/lib/docker/
           echo '{ "exec-opts": ["native.cgroupdriver=cgroupfs"], "cgroup-parent": "/actions_job","data-root": "/mnt/lib/docker"}' | sudo tee /etc/docker/daemon.json > /dev/null 
           sudo systemctl daemon-reload
           sudo systemctl start docker
