@@ -1,1 +1,1 @@
-neosmemo/memos:stable
+xhofe/alist:v3.35.0
