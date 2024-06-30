@@ -1,1 +1,1 @@
-xhofe/alist:v3.35.0
+eritpchy/aliyundrive-webdav
