@@ -23,7 +23,8 @@ jobs:
 
 
           # 钉钉机器人 Webhook 地址
-          webhook_url="https://oapi.dingtalk.com/robot/send?access_token=$DD_TOKEN"
+          dingding_token=${{secrets.DD_TOKEN}}
+          webhook_url="https://oapi.dingtalk.com/robot/send?access_token=$dingding_token"
           
           # 登录阿里云镜像仓库
           docker login --username=${{secrets.ALIYUNCS_USERNAME}} --password=${{secrets.ALIYUNCS_PASSWORD}} registry.cn-hangzhou.aliyuncs.com
