@@ -1,1 +1,1 @@
-nginx：1.22-alpine
+nginx:1.22-alpine
