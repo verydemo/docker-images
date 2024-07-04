@@ -41,7 +41,7 @@ jobs:
             docker rmi $NEW_IMAGE $OLD_IMAGE
 
             # 消息内容
-            message='{"msgtype": "text", "text": {"content": "${OLD_IMAGE}\n${NEW_IMAGE}"}}'
+            message='{"msgtype": "text", "text": {"content": "github:\n${OLD_IMAGE}\n${NEW_IMAGE}"}}'
             curl -H "Content-Type: application/json" -X POST -d "$message" "$webhook_url"
             image_log="${OLD_IMAGE} -> ${NEW_IMAGE}"
             echo "$image_log" >> log.txt
