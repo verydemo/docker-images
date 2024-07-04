@@ -23,7 +23,7 @@ jobs:
 
 
           # 钉钉机器人 Webhook 地址
-          dd_sign=${{secrets.DD_SIGN}
+          dd_sign=${{secrets.DD_SIGN}}
           dd_token=${{secrets.DD_TOKEN}}
           webhook_url="https://oapi.dingtalk.com/robot/send?access_token=$dd_token"
           
