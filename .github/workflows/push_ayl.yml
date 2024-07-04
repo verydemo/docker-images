@@ -47,7 +47,13 @@ jobs:
             # sign=$(echo -n "${timestamp}\n${dd_sign}" | openssl sha256 | awk '{print $2}')
 
             # 消息内容
-            message='{"msgtype": "text", "text": {"content": "github:\n${OLD_IMAGE}\n${NEW_IMAGE}"}}'
+            message=$(cat <<EOF
+            {
+                "text": {"content": "github:\n$OLD_IMAGE\n$NEW_IMAGE"},
+                "msgtype": "text"
+            }
+            EOF
+            )
             # curl -H "Content-Type: application/json" -X POST -d "$message" -H "Timestamp: $timestamp" -H "Sign: $sign" "$webhook_url"
             curl -H "Content-Type: application/json" -X POST -d "$message" "$webhook_url"
 
