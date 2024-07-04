@@ -23,8 +23,9 @@ jobs:
 
 
           # 钉钉机器人 Webhook 地址
-          dingding_token=${{secrets.DD_TOKEN}}
-          webhook_url="https://oapi.dingtalk.com/robot/send?access_token=$dingding_token"
+          dd_sign=${{secrets.ALIYUNCS_USERNAME}
+          dd_token=${{secrets.DD_TOKEN}}
+          webhook_url="https://oapi.dingtalk.com/robot/send?access_token=$dd_token"
           
           # 登录阿里云镜像仓库
           docker login --username=${{secrets.ALIYUNCS_USERNAME}} --password=${{secrets.ALIYUNCS_PASSWORD}} registry.cn-hangzhou.aliyuncs.com
@@ -41,9 +42,15 @@ jobs:
             docker push $NEW_IMAGE
             docker rmi $NEW_IMAGE $OLD_IMAGE
 
+            # 计算签名
+            timestamp=$(date +%s)
+            sign=$(echo -n "${timestamp}\n${dd_sign}" | openssl sha256 | awk '{print $2}')
+
             # 消息内容
             message='{"msgtype": "text", "text": {"content": "github:\n${OLD_IMAGE}\n${NEW_IMAGE}"}}'
-            curl -H "Content-Type: application/json" -X POST -d "$message" "$webhook_url"
+            curl -H "Content-Type: application/json" -X POST -d "$message" -H "Timestamp: $timestamp" -H "Sign: $sign" "$webhook_url"
+
+            # log
             image_log="${OLD_IMAGE} -> ${NEW_IMAGE}"
             echo "$image_log" >> log.txt
           done < images.txt
