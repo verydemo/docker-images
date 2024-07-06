@@ -1,4 +1,5 @@
-### 功能一 push_ayl.yml 推送到阿里云仓库的镜像tag images.txt
+### 功能一 push_ayl.yml images.txt
+推送到阿里云仓库的镜像
 ```
 pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime
 registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:pytorch-pytorch-2.3.0-cuda12.1-cudnn8-runtime
