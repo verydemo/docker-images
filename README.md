@@ -6,3 +6,6 @@ registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:pytorch-pytorch-2.3.0-cuda
 
 ### 功能二 download.yml urls.txt
 将文件打包在镜像中推送至阿里云镜像仓库
+```
+registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/download:20240706140151
+```
