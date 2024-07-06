@@ -1,4 +1,4 @@
-name: Docker pull push
+name: download
 on:  
   workflow_dispatch:
   repository_dispatch:
