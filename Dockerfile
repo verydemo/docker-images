@@ -5,5 +5,5 @@ WORKDIR /downloads
 COPY urls.txt .
 
 RUN while IFS= read -r url; do \
-        curl -O "$url" \
-    done < urls.txt 
+    curl -O "$url"; \
+done < urls.txt
