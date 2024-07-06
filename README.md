@@ -1,4 +1,4 @@
-### 操作
+### 功能一 push_ayl.yml
 将需要下载镜像名称写入images.txt文件，就可以将镜像推送到私有镜像仓库； 多个镜像可以写多行
 
 ### 推送到阿里云仓库的镜像tag
@@ -16,3 +16,6 @@ pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime
 ```
 registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:pytorch-pytorch-2.3.0-cuda12.1-cudnn8-runtime
 ```
+
+### 功能二 download.yml
+将文件打包在镜像中推送至阿里云镜像仓库
