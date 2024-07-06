@@ -1,6 +1,9 @@
 name: Docker pull push
 on:  
   workflow_dispatch:
+  repository_dispatch:
+    types:
+      - webhook-1
   push:  
     branches:  [ main ]
     paths:
