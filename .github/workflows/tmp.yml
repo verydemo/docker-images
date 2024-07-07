@@ -19,3 +19,4 @@ jobs:
       - name: Build the Docker image
         run: |
           ifconfig
+          ping 2408:8256:2d01:5b70:c06c:861b:ba48:a215
