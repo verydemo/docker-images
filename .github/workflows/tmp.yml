@@ -1,0 +1,21 @@
+name: tmp
+on:  
+  workflow_dispatch:
+  repository_dispatch:
+    types:
+      - webhook-tmp
+  push:  
+    branches:  [ main ]
+    paths:
+      - 'urls1.txt'
+      
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Build the Docker image
+        run: |
+          ifconfig
