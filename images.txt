@@ -1,1 +1,1 @@
-synctvorg/synctv
+osixia/phpldapadmin
