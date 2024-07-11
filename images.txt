@@ -1,1 +1,1 @@
-pymumu/smartdns
+synctvorg/synctv
