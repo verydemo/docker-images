@@ -1,0 +1,9 @@
+From jauderho/yt-dlp:latest
+
+WORKDIR /downloads
+
+COPY yt-urls.txt .
+
+RUN while IFS= read -r url; do \
+    echo $url && yt-dlp -f bestvideo "${url}"; \
+done < yt-urls.txt
