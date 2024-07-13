@@ -1,1 +1,1 @@
-cronicle/cronicle:0.9.29
+soulteary/cronicle:0.9
