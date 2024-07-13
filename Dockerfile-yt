@@ -7,3 +7,6 @@ COPY yt-urls.txt .
 RUN while IFS= read -r url; do \
     echo $url && yt-dlp -f bestvideo+bestaudio "${url}"; \
 done < yt-urls.txt
+
+
+# docker run --rm -it --entrypoint "tail" registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/download:yt_20240713065930
