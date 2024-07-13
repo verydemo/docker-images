@@ -1,0 +1,44 @@
+name: download
+on:  
+  workflow_dispatch:
+  repository_dispatch:
+    types:
+      - webhook-download-yt
+  push:  
+    branches:  [ main ]
+    paths:
+      - 'yt-urls.txt'
+      
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Build the Docker image
+        run: |
+          sudo systemctl stop docker
+          sudo mkdir -p /mnt/lib/docker
+          echo '{ "exec-opts": ["native.cgroupdriver=cgroupfs"], "cgroup-parent": "/actions_job","data-root": "/mnt/lib/docker"}' | sudo tee /etc/docker/daemon.json > /dev/null 
+          sudo systemctl daemon-reload
+          sudo systemctl start docker
+
+
+          # 钉钉机器人 Webhook 地址
+          dd_sign=${{secrets.DD_SIGN}}
+          dd_token=${{secrets.DD_TOKEN}}
+          webhook_url="https://oapi.dingtalk.com/robot/send?access_token=$dd_token"
+          
+          # 登录阿里云镜像仓库
+          docker login --username=${{secrets.ALIYUNCS_USERNAME}} --password=${{secrets.ALIYUNCS_PASSWORD}} registry.cn-hangzhou.aliyuncs.com
+
+          # 下载文件并推送镜像到阿里云镜像仓库
+          now=$(date +"%Y%m%d%H%M%S")
+          img=registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/download:yt_${now}
+          docker build -t $img .
+          docker push $img
+
+          # 发送通知
+          message=$(printf '{"msgtype": "text", "text": {"content": "github:\n %s"}}' "$img")
+          curl -H "Content-Type: application/json" -X POST -d "$message" "$webhook_url"
