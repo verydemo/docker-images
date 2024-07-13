@@ -36,7 +36,7 @@ jobs:
           # 下载文件并推送镜像到阿里云镜像仓库
           now=$(date +"%Y%m%d%H%M%S")
           img=registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/download:yt_${now}
-          docker build -t $img .
+          docker build -f Dockerfile-yt -t $img .
           docker push $img
 
           # 发送通知
