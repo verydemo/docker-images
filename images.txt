@@ -1,1 +1,1 @@
-osixia/openldap:latest
+nodered/node-red
