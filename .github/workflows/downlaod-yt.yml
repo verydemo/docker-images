@@ -1,4 +1,4 @@
-name: download
+name: download-yt
 on:  
   workflow_dispatch:
   repository_dispatch:
@@ -16,7 +16,7 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
 
-      - name: Build the Docker image
+      - name: download youtube
         run: |
           sudo systemctl stop docker
           sudo mkdir -p /mnt/lib/docker
