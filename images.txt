@@ -1,1 +1,1 @@
-soulteary/cronicle:0.9
+n8nio/n8n:1.50.0
