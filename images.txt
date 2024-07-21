@@ -1,1 +1,1 @@
-cloudnas/clouddrive2:latest@sha256:dc9adecab3fb3a718149f18c85da4a8bd767588fbe487245d62cd43e15c6aa09
+--platform=linux/arm64 xiaoyaliu/alist
