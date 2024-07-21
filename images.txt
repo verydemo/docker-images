@@ -1,1 +1,1 @@
-cloudnas/clouddrive2-unstable:latest
+cloudnas/clouddrive2@sha256-6e7139acd5f89ff11c49e2b4f24c164c6ce16aa109f97025d24ef0cc2198660a
