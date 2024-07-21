@@ -1,1 +1,1 @@
-cloudnas/clouddrive2@sha256-6e7139acd5f89ff11c49e2b4f24c164c6ce16aa109f97025d24ef0cc2198660a
+cloudnas/clouddrive2:latest@sha256:dc9adecab3fb3a718149f18c85da4a8bd767588fbe487245d62cd43e15c6aa09
