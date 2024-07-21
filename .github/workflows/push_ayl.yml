@@ -36,10 +36,26 @@ jobs:
           echo "------------------------------------------------------------------------------------------" >> log.txt
           # 遍历 images.txt 进行pull push
           while IFS= read -r img; do
-            OLD_IMAGE=$img
+            # 忽略空行与注释
+            [[ -z "$line" ]] && continue
+            if echo "$line" | grep -q '^\s*#'; then
+                continue
+            fi
+            
+            platform=$(echo "$line" | awk -F'--platform[ =]' '{if (NF>1) print $2}' | awk '{print $1}')
+
+            # 如果存在架构信息 将架构信息拼到镜像名称前面
+            if [ -z "$platform" ]; then
+                platform_prefix=""
+            else
+                platform_prefix="${platform//\//_}_"
+            fi
+
+            image=$(echo "$line" | awk '{print $NF}')
+          
+            OLD_IMAGE=$image
             NEW_IMAGE_VERSION=$(echo "$OLD_IMAGE" | sed 's/[/:]/-/g')
-            NEW_IMAGE_VERSION=$(echo "$NEW_IMAGE_VERSION" | sed 's/[/@]/-/g')
-            NEW_IMAGE=registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:$NEW_IMAGE_VERSION
+            NEW_IMAGE=registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:${platform_prefix}${NEW_IMAGE_VERSION}
             
             docker pull $OLD_IMAGE
             docker tag $OLD_IMAGE $NEW_IMAGE
