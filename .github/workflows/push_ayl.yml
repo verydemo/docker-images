@@ -38,6 +38,7 @@ jobs:
           while IFS= read -r img; do
             OLD_IMAGE=$img
             NEW_IMAGE_VERSION=$(echo "$OLD_IMAGE" | sed 's/[/:]/-/g')
+            NEW_IMAGE_VERSION=$(echo "$NEW_IMAGE_VERSION" | sed 's/[/@]/-/g')
             NEW_IMAGE=registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:$NEW_IMAGE_VERSION
             
             docker pull $OLD_IMAGE
