@@ -35,7 +35,7 @@ jobs:
 
           echo "------------------------------------------------------------------------------------------" >> log.txt
           # 遍历 images.txt 进行pull push
-          while IFS= read -r img; do
+          while IFS= read -r line; do
             # 忽略空行与注释
             [[ -z "$line" ]] && continue
             if echo "$line" | grep -q '^\s*#'; then
