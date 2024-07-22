@@ -1,1 +1,2 @@
---platform=linux/arm64 xiaoyaliu/alist
+# --platform=linux/arm64 xiaoyaliu/alist
+xhofe/alist:v3.36.0
