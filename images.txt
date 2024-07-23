@@ -1,2 +1,2 @@
 # --platform=linux/arm64 xiaoyaliu/alist
-xhofe/alist:v3.36.0
+vulhub/aj-report:1.4.0
