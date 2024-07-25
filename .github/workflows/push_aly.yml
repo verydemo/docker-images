@@ -1,0 +1,71 @@
+name: Docker image
+on:  
+  workflow_dispatch:
+  repository_dispatch:
+    types:
+      - webhook-aly
+      
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Build the Docker image
+        run: |
+          sudo systemctl stop docker
+          sudo mkdir -p /mnt/lib/docker
+          echo '{ "exec-opts": ["native.cgroupdriver=cgroupfs"], "cgroup-parent": "/actions_job","data-root": "/mnt/lib/docker"}' | sudo tee /etc/docker/daemon.json > /dev/null 
+          sudo systemctl daemon-reload
+          sudo systemctl start docker
+
+
+          # 钉钉机器人 Webhook 地址
+          dd_sign=${{secrets.DD_SIGN}}
+          dd_token=${{secrets.DD_TOKEN}}
+          webhook_url="https://oapi.dingtalk.com/robot/send?access_token=$dd_token"
+          
+          # 登录阿里云镜像仓库
+          docker login --username=${{secrets.ALIYUNCS_USERNAME}} --password=${{secrets.ALIYUNCS_PASSWORD}} registry.cn-hangzhou.aliyuncs.com
+
+          echo "------------------------------------------------------------------------------------------" >> log.txt
+          # 忽略空行与注释
+          image = ${{github.event.client_payload.image}}"
+          [[ -z "$image" ]] && exit 1
+          if echo "$image" | grep -q '^\s*#'; then
+              exit 1
+          fi
+          
+          platform=$(echo "$image" | awk -F'--platform[ =]' '{if (NF>1) print $2}' | awk '{print $1}')
+
+          # 如果存在架构信息 将架构信息拼到镜像名称前面
+          if [ -z "$platform" ]; then
+              platform_prefix=""
+          else
+              platform_prefix="${platform//\//_}_"
+          fi
+
+          cur_image=$(echo "$image" | awk '{print $NF}')
+        
+          OLD_IMAGE=$cur_image
+          NEW_IMAGE_VERSION=$(echo "$OLD_IMAGE" | sed 's/[/:]/-/g')
+          NEW_IMAGE=registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:${platform_prefix}${NEW_IMAGE_VERSION}
+          
+          docker pull $OLD_IMAGE
+          docker tag $OLD_IMAGE $NEW_IMAGE
+          docker push $NEW_IMAGE
+          docker rmi $NEW_IMAGE $OLD_IMAGE
+
+          # 计算签名
+          # timestamp=$(date +%s)
+          # sign=$(echo -n "${timestamp}\n${dd_sign}" | openssl sha256 | awk '{print $2}')
+
+          # 消息内容
+          message=$(printf '{"msgtype": "text", "text": {"content": "github:\n %s \n %s"}}' "$OLD_IMAGE" "$NEW_IMAGE")
+          # curl -H "Content-Type: application/json" -X POST -d "$message" -H "Timestamp: $timestamp" -H "Sign: $sign" "$webhook_url"
+          curl -H "Content-Type: application/json" -X POST -d "$message" "$webhook_url"
+
+          # log
+          image_log="${OLD_IMAGE} -> ${NEW_IMAGE}"
+          echo "$image_log"
