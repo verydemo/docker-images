@@ -31,7 +31,7 @@ jobs:
 
           echo "------------------------------------------------------------------------------------------" >> log.txt
           # 忽略空行与注释
-          image=${{github.event.client_payload.image}}
+          image="${{github.event.client_payload.image}}"
           echo $image
           [[ -z "$image" ]] && exit 1
           if echo "$image" | grep -q '^\s*#'; then
