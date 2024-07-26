@@ -53,7 +53,7 @@ jobs:
           NEW_IMAGE_VERSION=$(echo "$OLD_IMAGE" | sed 's/[/:]/-/g')
           NEW_IMAGE=registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:${platform_prefix}${NEW_IMAGE_VERSION}
           
-          docker pull $OLD_IMAGE
+          docker pull $image
           docker tag $OLD_IMAGE $NEW_IMAGE
           docker push $NEW_IMAGE
           docker rmi $NEW_IMAGE $OLD_IMAGE
