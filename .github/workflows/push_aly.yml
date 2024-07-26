@@ -67,6 +67,17 @@ jobs:
           # curl -H "Content-Type: application/json" -X POST -d "$message" -H "Timestamp: $timestamp" -H "Sign: $sign" "$webhook_url"
           curl -H "Content-Type: application/json" -X POST -d "$message" "$webhook_url"
 
+          # qq群消息
+          group_openid="${{github.event.client_payload.group_openid}}"
+          message_id="${{github.event.client_payload.message_id}}"
+          if [ -n "$group_openid" ]; then
+            qq_message=$(printf '{"msgtype": "text", "group_openid":"%s", "message_id","%s" ,"text": {"content": "github:\n %s \n %s"}}' "$group_openid" "$message_id" "$OLD_IMAGE" "$NEW_IMAGE")
+            curl -H "Content-Type: application/json" -X POST -d "$qq_message" 'http://8.138.114.154:9010/message'
+          fi
+
+
+          
+
           # log
           image_log="${OLD_IMAGE} -> ${NEW_IMAGE}"
           echo "$image_log"
