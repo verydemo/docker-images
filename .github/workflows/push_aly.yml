@@ -62,22 +62,20 @@ jobs:
           # timestamp=$(date +%s)
           # sign=$(echo -n "${timestamp}\n${dd_sign}" | openssl sha256 | awk '{print $2}')
 
-          # 消息内容
-          message=$(printf '{"msgtype": "text", "text": {"content": "github:\n %s \n %s"}}' "$OLD_IMAGE" "$NEW_IMAGE")
-          # curl -H "Content-Type: application/json" -X POST -d "$message" -H "Timestamp: $timestamp" -H "Sign: $sign" "$webhook_url"
-          curl -H "Content-Type: application/json" -X POST -d "$message" "$webhook_url"
-
           # qq群消息
           group_openid="${{github.event.client_payload.group_openid}}"
           message_id="${{github.event.client_payload.message_id}}"
-          if [ -n "$group_openid" ]; then
+          if [ -n "$message_id" ]; then
             qq_message=$(printf '{"msgtype": "text", "group_openid":"%s", "message_id":"%s","text": {"content": "github,%s,%s"}}' "$group_openid" "$message_id" "$OLD_IMAGE" "$NEW_IMAGE")
             echo ${qq_message} > qq.msg
             curl -H "Content-Type: application/json" -X POST -d @qq.msg 'http://8.138.114.154:18080/dockerimage/message'
           fi
 
-
-          
+          # 消息内容
+          message=$(printf '{"msgtype": "text", "text": {"content": "github:\n %s \n %s"}}' "$OLD_IMAGE" "$NEW_IMAGE")
+          if [ -z "$message_id" ]; then
+            curl -H "Content-Type: application/json" -X POST -d "$message" "$webhook_url"
+          fi
 
           # log
           image_log="${OLD_IMAGE} -> ${NEW_IMAGE}"
