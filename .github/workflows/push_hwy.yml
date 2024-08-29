@@ -55,7 +55,7 @@ jobs:
           OLD_IMAGE=$cur_image
           # NEW_IMAGE_VERSION=$(echo "$OLD_IMAGE" | sed 's/[/:]/-/g')
           # NEW_IMAGE=registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:${platform_prefix}${NEW_IMAGE_VERSION}
-          NEW_IMAGE=swr.cn-north-4.myhuaweicloud.com/jiro/{OLD_IMAGE}
+          NEW_IMAGE=swr.cn-north-4.myhuaweicloud.com/jiro/${OLD_IMAGE}
           
           docker pull $image
           docker tag $OLD_IMAGE $NEW_IMAGE
