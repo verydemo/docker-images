@@ -1,0 +1,86 @@
+name: PUSH HWY
+on:  
+  workflow_dispatch:
+  repository_dispatch:
+    types:
+      - webhook-hwy
+      
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Build the Docker image
+        run: |
+          sudo systemctl stop docker
+          sudo mkdir -p /mnt/lib/docker
+          echo '{ "exec-opts": ["native.cgroupdriver=cgroupfs"], "cgroup-parent": "/actions_job","data-root": "/mnt/lib/docker"}' | sudo tee /etc/docker/daemon.json > /dev/null 
+          sudo systemctl daemon-reload
+          sudo systemctl start docker
+
+
+          # 钉钉机器人 Webhook 地址
+          dd_sign=${{secrets.DD_SIGN}}
+          dd_token=${{secrets.DD_TOKEN}}
+          webhook_url="https://oapi.dingtalk.com/robot/send?access_token=$dd_token"
+          
+          # 登录阿里云镜像仓库
+          # docker login --username=${{secrets.ALIYUNCS_USERNAME}} --password=${{secrets.ALIYUNCS_PASSWORD}} registry.cn-hangzhou.aliyuncs.com
+
+          # 登录华为云镜像仓库
+          docker login -u ${{secrets.HWY_USERNAME}} -p ${{secrets.HWY_PASSWORD}} swr.cn-north-4.myhuaweicloud.com
+
+          echo "------------------------------------------------------------------------------------------" >> log.txt
+          # 忽略空行与注释
+          image="${{github.event.client_payload.image}}"
+          echo $image
+          [[ -z "$image" ]] && exit 1
+          if echo "$image" | grep -q '^\s*#'; then
+              exit 1
+          fi
+          
+          platform=$(echo "$image" | awk -F'--platform[ =]' '{if (NF>1) print $2}' | awk '{print $1}')
+
+          # 如果存在架构信息 将架构信息拼到镜像名称前面
+          if [ -z "$platform" ]; then
+              platform_prefix=""
+          else
+              platform_prefix="${platform//\//_}_"
+          fi
+
+          cur_image=$(echo "$image" | awk '{print $NF}')
+        
+          OLD_IMAGE=$cur_image
+          # NEW_IMAGE_VERSION=$(echo "$OLD_IMAGE" | sed 's/[/:]/-/g')
+          # NEW_IMAGE=registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:${platform_prefix}${NEW_IMAGE_VERSION}
+          NEW_IMAGE=swr.cn-north-4.myhuaweicloud.com/jiro/{OLD_IMAGE}
+          
+          docker pull $image
+          docker tag $OLD_IMAGE $NEW_IMAGE
+          docker push $NEW_IMAGE
+          # docker rmi $NEW_IMAGE $OLD_IMAGE
+
+          # 计算签名
+          # timestamp=$(date +%s)
+          # sign=$(echo -n "${timestamp}\n${dd_sign}" | openssl sha256 | awk '{print $2}')
+
+          # qq群消息
+          group_openid="${{github.event.client_payload.group_openid}}"
+          message_id="${{github.event.client_payload.message_id}}"
+          if [ -n "$message_id" ]; then
+            qq_message=$(printf '{"msgtype": "text", "group_openid":"%s", "message_id":"%s","text": {"content": "github,%s,%s"}}' "$group_openid" "$message_id" "$OLD_IMAGE" "$NEW_IMAGE")
+            echo ${qq_message} > qq.msg
+            curl -H "Content-Type: application/json" -X POST -d @qq.msg 'http://8.138.114.154:18080/dockerimage/message'
+          fi
+
+          # 消息内容
+          message=$(printf '{"msgtype": "text", "text": {"content": "github:\n %s \n %s"}}' "$OLD_IMAGE" "$NEW_IMAGE")
+          if [ -z "$message_id" ]; then
+            curl -H "Content-Type: application/json" -X POST -d "$message" "$webhook_url"
+          fi
+
+          # log
+          image_log="${OLD_IMAGE} -> ${NEW_IMAGE}"
+          echo "$image_log"
