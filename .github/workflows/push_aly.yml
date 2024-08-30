@@ -103,6 +103,8 @@ jobs:
             echo ${qq_message} > qq.msg
             curl -H "Content-Type: application/json" -X POST -d @qq.msg 'http://8.138.114.154:18080/dockerimage/message'
           else
-            curl -H "Content-Type: application/json" -X POST -d '{"status":"fail","message_id": "${message_id}" ,"old_image":"${OLD_IMAGE}"}' 'http://8.138.114.154:18080/dockerimage/message'
+            qq_message=$(printf '{"status":"fail","msgtype": "text", "group_openid":"%s", "message_id":"%s", "old_image":"%s", "new_image":"%s"}' "$group_openid" "$message_id" "$OLD_IMAGE" "$NEW_IMAGE")
+            echo ${qq_message} > qq_fail.msg
+            curl -H "Content-Type: application/json" -X POST -d @qq_fail.msg 'http://8.138.114.154:18080/dockerimage/message'
           fi
           
