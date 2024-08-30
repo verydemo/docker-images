@@ -54,23 +54,23 @@ jobs:
           NEW_IMAGE_VERSION=$(echo "$OLD_IMAGE" | sed 's/[/:]/-/g')
           NEW_IMAGE=registry.cn-hangzhou.aliyuncs.com/jiro-jlzhang/common:${platform_prefix}${NEW_IMAGE_VERSION}
 
-          echo "::set-output name=OLD_IMAGE::${OLD_IMAGE}"
-          echo "::set-output name=NEW_IMAGE::${NEW_IMAGE}"
+          echo "OLD_IMAGE=${OLD_IMAGE}" >> $GITHUB_ENV
+          echo "NEW_IMAGE=${NEW_IMAGE}" >> $GITHUB_ENV
           
           docker pull $image
           docker tag $OLD_IMAGE $NEW_IMAGE
           docker push $NEW_IMAGE
           # docker rmi $NEW_IMAGE $OLD_IMAGE
           
-          echo "::set-output name=FLAG::success"
+          echo "PUSH_FLAG=success" >> $GITHUB_ENV
           
           # 计算签名
           # timestamp=$(date +%s)
           # sign=$(echo -n "${timestamp}\n${dd_sign}" | openssl sha256 | awk '{print $2}')
 
           # qq群消息
-          # group_openid="${{github.event.client_payload.group_openid}}"
-          # message_id="${{github.event.client_payload.message_id}}"
+          group_openid="${{github.event.client_payload.group_openid}}"
+          message_id="${{github.event.client_payload.message_id}}"
           # if [ -n "$message_id" ]; then
           #   qq_message=$(printf '{"msgtype": "text", "group_openid":"%s", "message_id":"%s","text": {"content": "github,%s,%s"}}' "$group_openid" "$message_id" "$OLD_IMAGE" "$NEW_IMAGE")
           #   echo ${qq_message} > qq.msg
@@ -89,9 +89,9 @@ jobs:
 
       - name: message
         run: |
-          OLD_IMAGE=$(echo ${{ steps.step1.outputs.OLD_IMAGE }})
-          NEW_IMAGE=$(echo ${{ steps.step1.outputs.NEW_IMAGE }})
-          FLAG=$(echo ${{ steps.step1.outputs.FLAG }})
+          OLD_IMAGE=$(echo ${OLD_IMAGE})
+          NEW_IMAGE=$(echo ${NEW_IMAGE})
+          FLAG=${FLAG})
           echo $OLD_IMAGE
           echo $NEW_IMAGE
 
@@ -99,7 +99,7 @@ jobs:
           group_openid="${{github.event.client_payload.group_openid}}"
           message_id="${{github.event.client_payload.message_id}}"
           if [ -n "$message_id" ] && [ -n "$FLAG"]; then
-            qq_message=$(printf '{"msgtype": "text", "group_openid":"%s", "message_id":"%s","text": {"content": "github,%s,%s"}}' "$group_openid" "$message_id" "$OLD_IMAGE" "$NEW_IMAGE")
+            qq_message=$(printf '{"status":"success","msgtype": "text", "group_openid":"%s", "message_id":"%s","text": {"content": "github,%s,%s"}}' "$group_openid" "$message_id" "$OLD_IMAGE" "$NEW_IMAGE")
             echo ${qq_message} > qq.msg
             curl -H "Content-Type: application/json" -X POST -d @qq.msg 'http://8.138.114.154:18080/dockerimage/message'
           else
