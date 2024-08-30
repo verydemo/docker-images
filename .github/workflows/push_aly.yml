@@ -89,16 +89,15 @@ jobs:
 
       - name: message
         run: |
-          OLD_IMAGE=$(echo ${OLD_IMAGE})
-          NEW_IMAGE=$(echo ${NEW_IMAGE})
-          FLAG=${FLAG})
+
           echo $OLD_IMAGE
           echo $NEW_IMAGE
+          echo $PUSH_FLAG
 
           # qq群消息
           group_openid="${{github.event.client_payload.group_openid}}"
           message_id="${{github.event.client_payload.message_id}}"
-          if [ -n "$message_id" ] && [ -n "$FLAG"]; then
+          if [ -n "$message_id" ] && [ -n "$PUSH_FLAG"]; then
             qq_message=$(printf '{"status":"success","msgtype": "text", "group_openid":"%s", "message_id":"%s","text": {"content": "github,%s,%s"}}' "$group_openid" "$message_id" "$OLD_IMAGE" "$NEW_IMAGE")
             echo ${qq_message} > qq.msg
             curl -H "Content-Type: application/json" -X POST -d @qq.msg 'http://8.138.114.154:18080/dockerimage/message'
