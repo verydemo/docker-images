@@ -97,7 +97,7 @@ jobs:
           # qq群消息
           group_openid="${{github.event.client_payload.group_openid}}"
           message_id="${{github.event.client_payload.message_id}}"
-          if [ -n "$message_id" ] && [ -n "$PUSH_FLAG"]; then
+          if [ -n "$message_id" ] && [ -n "$PUSH_FLAG" ]; then
             # qq_message=$(printf '{"status":"success","msgtype": "text", "group_openid":"%s", "message_id":"%s","text": {"content": "github,%s,%s"}}' "$group_openid" "$message_id" "$OLD_IMAGE" "$NEW_IMAGE")
             qq_message=$(printf '{"status":"success","msgtype": "text", "group_openid":"%s", "message_id":"%s", "old_image":"%s", "new_image":"%s"}', "$group_openid" "$message_id" "$OLD_IMAGE" "$NEW_IMAGE")
             echo ${qq_message} > qq.msg
