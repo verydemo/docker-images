@@ -1,2 +1,2 @@
 # --platform=linux/arm64 xiaoyaliu/alist
-vulhub/aj-report:1.4.0
+mlikiowa/napcat-docker:v2.3.5
