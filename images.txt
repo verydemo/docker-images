@@ -1,3 +1,4 @@
 # --platform=linux/arm64 xiaoyaliu/alist
 mlikiowa/napcat-docker:v2.3.5
 redis:7.2
+mysql:latest
